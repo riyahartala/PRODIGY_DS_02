@@ -1,0 +1,43 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+
+# Load Iris Dataset
+iris = load_iris()
+df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+df['species'] = iris.target
+df['species'] = df['species'].map({0: 'setosa', 1: 'versicolor', 2: 'virginica'})
+
+# Basic Info
+print(df.head())
+print(df.describe())
+print(df['species'].value_counts())
+
+# Visualization Settings
+sns.set(style='whitegrid', palette='muted')
+plt.rcParams['figure.figsize'] = (8, 5)
+
+# Count Plot of Species
+sns.countplot(x='species', data=df)
+plt.title('Count of Iris Species')
+plt.show()
+
+# Pairplot for Feature Distributions
+sns.pairplot(df, hue='species', diag_kind='kde')
+plt.suptitle('Pairplot of Iris Features', y=1.02)
+plt.show()
+
+# Boxplots for Features by Species
+features = iris.feature_names
+for feature in features:
+    sns.boxplot(x='species', y=feature, data=df)
+    plt.title(f'{feature.capitalize()} by Species')
+    plt.show()
+
+# Correlation Heatmap
+corr = df.drop(columns='species').corr()
+sns.heatmap(corr, annot=True, cmap='coolwarm', fmt=".2f")
+plt.title('Correlation Heatmap of Iris Features')
+plt.show()
